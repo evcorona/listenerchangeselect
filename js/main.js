@@ -195,11 +195,13 @@ Deberán crear una tabla, la cual se llenará con aquellos objetos de personArra
 */
 
 //Listener activa cada que se cambia select
+
+
 document.getElementById("mySelector").addEventListener('change', event => {
   if (event.target.value !== "") {
     document.getElementById("selectionAlert").innerText = `Seleccionaste ${event.target.value}`
     document.getElementById("selectedData").innerHTML = ""
-    let newBD = filterData(personArray, event.target.value)
+    let newBD = filterData(personArray,"type",event.target.value)
     fillDataToTable(newBD)
   }
   else {
@@ -208,8 +210,10 @@ document.getElementById("mySelector").addEventListener('change', event => {
   }
 })
 
-const filterData = (BDdata,criteria) => {return BDdata.filter(data => { return data.type === criteria })}
+//Funcion que filtra el Json por la opciones del selector
+const filterData = (BDdata,property,criteria) => {return BDdata.filter(data => { return data[property] === criteria })}
 
+//Funcion que llena la tabla en HTML
 const fillDataToTable = (BDdata) => {
   BDdata.forEach(data => {
     let currentContent = document.getElementById("selectedData").innerHTML
@@ -223,22 +227,3 @@ const fillDataToTable = (BDdata) => {
     document.getElementById("selectedData").innerHTML = currentContent + newRow
   })
 }
-
-/*
-//iteramos dentro de nuestro array de datos
-filteredData.forEach(data => {
-  let dataRow = document.createElement("tr")
-  let cellData1 = document.createElement("td")
-  let cellData2 = document.createElement("td")
-  let cellData3 = document.createElement("td")
-  let textData1 = document.createTextNode(data.name)
-  let textData2 = document.createTextNode(data.email)
-  let textData3 = document.createTextNode(data.type)
-  cellData1.appendChild(textData1)
-  cellData2.appendChild(textData2)
-  cellData3.appendChild(textData3)
-  dataRow.appendChild(cellData1)
-  dataRow.appendChild(cellData2)
-  dataRow.appendChild(cellData3)
-  document.getElementById("selectedData").appendChild(dataRow)
-*/
