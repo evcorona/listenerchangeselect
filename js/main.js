@@ -195,43 +195,50 @@ Deberán crear una tabla, la cual se llenará con aquellos objetos de personArra
 */
 
 //Listener activa cada que se cambia select
-document.getElementById("mySelector").addEventListener('change', (event) => {
+document.getElementById("mySelector").addEventListener('change', event => {
   if (event.target.value !== "") {
-    document.getElementById("selectionAlert").textContent = `Seleccionaste ${event.target.value}`
-    let typeSelected = event.target.value
+    document.getElementById("selectionAlert").innerText = `Seleccionaste ${event.target.value}`
     document.getElementById("selectedData").innerHTML = ""
-    fillFilteredData(personArray, typeSelected)
+    let newBD = filterData(personArray, event.target.value)
+    fillDataToTable(newBD)
   }
   else {
-    document.getElementById("selectionAlert").textContent = ``
+    document.getElementById("selectionAlert").innerText = ""
     document.getElementById("selectedData").innerHTML = "No data selected!"
   }
 })
 
-/*Llenar datos a una tabla*/
-const fillFilteredData = (BDdata, selection) => {
-  let filteredData = BDdata.filter(data => { return data.type === selection })
-  /*iteramos dentro de nuestro array de datos*/
-  filteredData.forEach(data => { /*por cada objeto de datos*/
-    /*creamos una fila que será inyectada en la tabla*/
-    let dataRow = document.createElement("tr")
-    /*creamos las celdas que serán inyectadas en la fila*/
-    let cellData1 = document.createElement("td")
-    let cellData2 = document.createElement("td")
-    let cellData3 = document.createElement("td")
-    /*creamos los nodos de texto que serán inyectados en cada respectiva celda*/
-    let textData1 = document.createTextNode(data.name)
-    let textData2 = document.createTextNode(data.email)
-    let textData3 = document.createTextNode(data.type)
-    /*inyectamos los textos en las celdas correspondientes*/
-    cellData1.appendChild(textData1)
-    cellData2.appendChild(textData2)
-    cellData3.appendChild(textData3)
-    /*inyectamos las celdas que ya contienen texto dentro de la fila*/
-    dataRow.appendChild(cellData1)
-    dataRow.appendChild(cellData2)
-    dataRow.appendChild(cellData3)
-    /*inyectamos la fila en el elemento correspondiente*/
-    document.getElementById("selectedData").appendChild(dataRow)
+const filterData = (BDdata,criteria) => {return BDdata.filter(data => { return data.type === criteria })}
+
+const fillDataToTable = (BDdata) => {
+  BDdata.forEach(data => {
+    let currentContent = document.getElementById("selectedData").innerHTML
+    let newRow = `
+    <tr>
+      <td>${data._id}
+      <td>${data.name}
+      <td>${data.email}
+      <td>${data.type}
+    </tr>`
+    document.getElementById("selectedData").innerHTML = currentContent + newRow
   })
 }
+
+/*
+//iteramos dentro de nuestro array de datos
+filteredData.forEach(data => {
+  let dataRow = document.createElement("tr")
+  let cellData1 = document.createElement("td")
+  let cellData2 = document.createElement("td")
+  let cellData3 = document.createElement("td")
+  let textData1 = document.createTextNode(data.name)
+  let textData2 = document.createTextNode(data.email)
+  let textData3 = document.createTextNode(data.type)
+  cellData1.appendChild(textData1)
+  cellData2.appendChild(textData2)
+  cellData3.appendChild(textData3)
+  dataRow.appendChild(cellData1)
+  dataRow.appendChild(cellData2)
+  dataRow.appendChild(cellData3)
+  document.getElementById("selectedData").appendChild(dataRow)
+*/
