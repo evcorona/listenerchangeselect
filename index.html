@@ -12,7 +12,7 @@
 
 <body class="bg-dark">
     <nav class="navbar fixed-top text-white bg-success shadow d-flex flex-row justify-content-center">
-        <h1 class="navbar-brand">Verox Crown - Select & Change</h1>
+        <h1 class="navbar-brand">Verox Crown - Queries to a JSON</h1>
     </nav>
 
     <div class="container-fluid">
@@ -21,17 +21,27 @@
                 <div class="row p-4 mt-4 d-flex flex-column align-items-center">
                     <div class="col-12">
                         <h1 class="text-white m-3">Consulta</h1>
-                        <form>
+                        <form action="" class="p-3 shadow rounded bg-secondary text-white mt-3">
                             <div class="form-group">
-                                <select class="custom-select" id="mySelector">
-                                    <option selected class="text-muted" value="">Selecciona un tipo de persona</option>
-                                    <option value="Mentor">Mentor</option>
-                                    <option value="Koder">Koder</option>
-                                    <option value="Koordinator">Koordinator</option>
-                                    <option value="Staff">Staff</option>
+                                <label for="">Filtrar por:</label>
+                                <select class="custom-select" id="propertySelector">
+                                    <option selected class="text-muted" value="">Selecciona una opción</option>
+                                    <option value="gender">Género</option> 
+                                    <option value="type">Tipo</option>     
+                                    <option value="isActive">Status</option> 
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label for="">Filtrar por:</label>
+                                <select class="custom-select" id="mySelector">
+                                </select>
+                            </div>                    
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Filtrar por Nombre</label>
+                                <input class="form-control" type="search" id="search" placeholder="Nombre">
+                              </div>        
                         </form>
+                        <p class="text-info m-3 w-100 p-1 font-weight-light" id="propertyAlert"></p>
                         <p class="text-success m-3 w-100 p-1 font-weight-light" id="selectionAlert"></p>
                         <table class="table table-striped table-dark my-4 shadow table-hover">
                             <thead>
@@ -39,6 +49,7 @@
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Tipo</th>
+                                <th scope="col">&nbsp</th>
                             </thead>
                             <tbody id="selectedData"></tbody>
                         </table>

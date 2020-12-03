@@ -194,36 +194,117 @@ Una vez logrado eso, ese select debe funcionar como un criterio de filtro.
 Deberán crear una tabla, la cual se llenará con aquellos objetos de personArray cuyo tipo coincida con el seleccionado en el select
 */
 
-//Listener activa cada que se cambia select
-
-
-document.getElementById("mySelector").addEventListener('change', event => {
+//--------------------------------------------------Listener y Acciones para el Select 1--------------------------------------------------
+//Listener activa cada que se cambia select1
+document.getElementById("propertySelector").addEventListener('change', event => {
+  clearElements()
   if (event.target.value !== "") {
-    document.getElementById("selectionAlert").innerText = `Seleccionaste ${event.target.value}`
-    document.getElementById("selectedData").innerHTML = ""
-    let newBD = filterData(personArray,"type",event.target.value)
-    fillDataToTable(newBD)
+    document.getElementById("propertyAlert").innerText = `Seleccionaste ${event.target.value}`
+    /*
+    let propertyOptions = []
+    switch (event.target.value) {
+      case "gender":
+        propertyOptions = ["female", "male"]
+        break
+      case "type":
+        propertyOptions = ["Mentor", "Staff", "Koordinator", "Koder"]
+        break
+      case "isActive":
+        propertyOptions = [true, false]
+        break
+    }*/
+    let propertyOptions = getOptions(event.target.value, personArray)
+    console.log(propertyOptions)
+    fillOptionsSelector(propertyOptions)
   }
   else {
-    document.getElementById("selectionAlert").innerText = ""
-    document.getElementById("selectedData").innerHTML = "No data selected!"
+    clearElements()
   }
 })
 
+//Funcion que limpia todo el display
+const clearElements = () => {
+  document.getElementById("mySelector").innerHTML = ""
+  document.getElementById("selectedData").innerHTML = ""
+  document.getElementById("propertyAlert").innerText = ""
+  document.getElementById("selectionAlert").innerText = ""
+}
+
+const getOptions = (key, BDdata) => {
+  let options = BDdata.reduce((accum, data) => {
+    return accum.includes(data[key]) ? accum : [...accum, data[key]]
+  }, [])
+  return options
+}
+
+//Funcion que llena el segundo selector
+const fillOptionsSelector = criteria => {
+  document.getElementById("mySelector").innerHTML = `<option disabled class="text-muted" value="">Selecciona una opción</option>`
+  criteria.forEach(data => { document.getElementById("mySelector").innerHTML += `<option value = "${data}">${data}</option>` })
+}
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+//--------------------------------------------------Listener y Acciones para el Select 2--------------------------------------------------
+//Listener activa cada que se cambia select2
+document.getElementById("mySelector").addEventListener('change', event => {
+  document.getElementById("selectedData").innerHTML = ""
+  document.getElementById("selectionAlert").innerText = ""
+  document.getElementById("selectionAlert").innerText = `Seleccionaste ${event.target.value}`
+  let property = document.getElementById("propertySelector").value
+  let value
+  property === "isActive" ? value = (event.target.value == "true") : value = event.target.value
+  let newBD = filterData(personArray, property, value)
+  fillDataToTable(newBD)
+})
+
 //Funcion que filtra el Json por la opciones del selector
-const filterData = (BDdata,property,criteria) => {return BDdata.filter(data => { return data[property] === criteria })}
+const filterData = (BDdata, key, criteria) => { return BDdata.filter(data => { return data[key] === criteria }) }
 
 //Funcion que llena la tabla en HTML
-const fillDataToTable = (BDdata) => {
-  BDdata.forEach(data => {
+const fillDataToTable = BDdata => {
+  BDdata.forEach((data, index) => {
+    let { _id, name, email, type } = data
     let currentContent = document.getElementById("selectedData").innerHTML
     let newRow = `
     <tr>
-      <td>${data._id}
-      <td>${data.name}
-      <td>${data.email}
-      <td>${data.type}
+      <td>${_id}
+      <td>${name}
+      <td>${email}
+      <td>${type}
+      <td> <button type="button" class="btn btn-danger btn-sm btn-remove" data-person-index=${index}>Eliminar</button>
     </tr>`
     document.getElementById("selectedData").innerHTML = currentContent + newRow
   })
 }
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+
+//**************************************************************************
+/*
+//Funcion para obtener los diferentes valores de alguna propiedad, dentro de un array de objetos
+const getTypeOptions = (property, arrayToReduce) => { //recibimos la propiedad que queremos extraer, y el array de objetos
+  //Creamos una variable "options" que guarde el array de las opciones disponibles
+  let options = arrayToReduce.reduce((accum, current) => {
+    //mi acumulador contiene la opción ? sí: regresamos el acumulador sin cambios : no: agregamos la opción al acumulador y regresamos el acumulador modificado
+    return accum.includes(current[property]) ? accum : [...accum, current[property]]
+  }, [])
+  //devolvemos las opciones
+  return options
+}
+//Creamos una función para llenar el segundo select, recibiendo la lista de opciones a presentar
+const fillFilterSelect = optionsList => {
+  //guardamos el select en una variable para facilitar todo
+  let select = document.getElementById("filter-select")
+  //vaciamos el select
+  select.innerHTML = ""
+  //iteramos dentro de la lista de opciones
+  optionsList.forEach(option => {
+    //guardamos el contenido actual del select
+    let currentHtml = select.innerHTML
+    //creamos una nueva opción, cuyo value y texto vienen de la lista de opciones
+    let optionHTML = `<option value=${option}>${option === true ? "Activo" : option === false ? "Inactivo" : option}</option>`
+    //agregamos la opcón al html del select
+    select.innerHTML = currentHtml + optionHTML
+  })
+}
+*/
